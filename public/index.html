@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sure Shot Supplemental Draft</title>
+<link rel="icon" href="/ssl-logo.jpg">
+<style>
+  :root{--bg:#0b1220;--panel:#121b2e;--panel2:#18233b;--line:#25324f;--text:#e8eefc;--muted:#8fa0c2;--accent:#2f7bff;--accent2:#1d5fd6;--good:#22c55e;--warn:#f59e0b;--bad:#ef4444;
+    --QB:#e05d5d;--RB:#2bb673;--WR:#3b8cff;--TE:#f0a030;--K:#a07de0;--DST:#7a8aa8}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+  button{font:inherit;cursor:pointer;border:0;border-radius:8px}
+  input,select{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+  header{display:flex;align-items:center;gap:16px;padding:12px 20px;background:linear-gradient(90deg,#0f2a63,#123a8c);border-bottom:1px solid var(--line);flex-wrap:wrap}
+  header h1{font-size:18px;margin:0;letter-spacing:.3px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand img{height:46px;width:auto;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.35);background:#fff}
+  .snd{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.15);color:#e8eefc;padding:6px 10px;border-radius:999px}
+  .snd.off{color:#b9c8ee;animation:pulse 1.6s infinite}
+  .modal .mlogo{display:block;height:64px;margin:0 0 12px;border-radius:8px;background:#fff}
+  .cell.fresh{animation:fresh 1.6s ease-out}
+  @keyframes fresh{0%{transform:scale(1.12);box-shadow:0 0 0 6px rgba(255,255,255,.55)}100%{transform:scale(1);box-shadow:none}}
+  header h1 small{display:block;font-weight:400;color:#b9c8ee;font-size:12px}
+  .clock{flex:1;min-width:260px;display:flex;align-items:center;gap:12px;justify-content:center}
+  .clock .pill{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.15);padding:8px 14px;border-radius:999px}
+  .clock .you{background:var(--good);color:#04230f;font-weight:700;border:0;animation:pulse 1.6s infinite}
+  @keyframes pulse{50%{box-shadow:0 0 0 6px rgba(34,197,94,.25)}}
+  .me{display:flex;gap:8px;align-items:center}
+  .me .name{font-weight:600}
+  .link{background:none;color:#b9c8ee;text-decoration:underline;padding:0}
+  main{display:grid;grid-template-columns:minmax(380px,1fr) 1.35fr;gap:16px;padding:16px 20px}
+  @media (max-width:1000px){main{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+  .card h2{font-size:14px;margin:0;padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  .tools{display:flex;gap:8px;padding:10px 14px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+  .tools input[type=search]{flex:1;min-width:160px}
+  .chip{background:var(--panel2);color:var(--muted);border:1px solid var(--line);padding:6px 10px;border-radius:999px}
+  .chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .list{overflow:auto;max-height:calc(100vh - 230px)}
+  table{width:100%;border-collapse:collapse}
+  th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+  th{position:sticky;top:0;background:var(--panel);color:var(--muted);font-weight:600;font-size:12px;cursor:pointer;user-select:none}
+  td.num,th.num{text-align:right}
+  tr.taken td{opacity:.35}
+  .pos{display:inline-block;min-width:34px;text-align:center;font-size:11px;font-weight:700;padding:2px 5px;border-radius:5px;color:#fff}
+  .btn{background:var(--accent);color:#fff;padding:6px 12px}
+  .btn:hover{background:var(--accent2)}
+  .btn[disabled]{background:#2a3657;color:#6f7fa3;cursor:not-allowed}
+  .btn.confirm{background:var(--good);color:#04230f;font-weight:700}
+  .btn.ghost{background:var(--panel2);border:1px solid var(--line);color:var(--text)}
+  .btn.danger{background:var(--bad)}
+  .board{overflow:auto}
+  .grid{display:grid;gap:6px;padding:12px;min-width:720px}
+  .gh{font-size:11px;color:var(--muted);text-align:center;padding:4px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .gh.mine{color:#fff}
+  .rl{font-size:11px;color:var(--muted);display:flex;align-items:center;justify-content:center;font-weight:700}
+  .cell{background:var(--panel2);border:1px solid var(--line);border-radius:8px;min-height:62px;padding:6px 7px;font-size:12px;position:relative}
+  .cell .no{position:absolute;top:4px;right:6px;font-size:10px;color:var(--muted)}
+  .cell .pn{font-weight:700;margin-top:12px;line-height:1.15}
+  .cell .pt{color:#dfe7fb;opacity:.85;font-size:11px}
+  .cell.now{outline:2px solid var(--good);background:#11301f}
+  .cell.mine{border-color:#4d6fb8}
+  .cell.filled{color:#fff;border:0}
+  .overlay{position:fixed;inset:0;background:rgba(3,7,18,.82);display:flex;align-items:center;justify-content:center;z-index:10;padding:20px}
+  .modal{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;max-width:560px;width:100%}
+  .modal h3{margin:0 0 4px;font-size:20px}
+  .modal p{color:var(--muted);margin:0 0 16px}
+  .teams{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .teams button{background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:12px;text-align:left}
+  .teams button:hover{border-color:var(--accent)}
+  .teams button span{display:block;color:var(--muted);font-size:12px}
+  .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#1f2b47;border:1px solid var(--line);padding:10px 16px;border-radius:10px;z-index:20;display:none}
+  .toast.err{background:#4a1620;border-color:#7a2433}
+  .admin{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 14px;border-top:1px solid var(--line);background:#1a1430}
+  .muted{color:var(--muted)}
+  .mypicks{padding:10px 14px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .done{padding:30px;text-align:center;font-size:16px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><img src="/ssl-logo.jpg" alt="Sure Shot League"><h1>Sure Shot Supplemental Draft<small>4 rounds · snake · reverse power rankings</small></h1></div>
+  <div class="clock" id="clock"></div>
+  <button class="snd" id="snd" title="Pick sound on/off"></button>
+  <div class="me" id="me"></div>
+</header>
+
+<main>
+  <section class="card">
+    <h2><span>Available Free Agents</span><span class="muted" id="count"></span></h2>
+    <div class="tools">
+      <input type="search" id="q" placeholder="Search player or NFL team…">
+      <div id="chips" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+      <label class="muted" style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="showTaken"> show drafted</label>
+    </div>
+    <div class="list">
+      <table>
+        <thead><tr>
+          <th data-k="name">Player</th><th data-k="pos">Pos</th><th data-k="team">Tm</th><th data-k="bye" class="num">Bye</th>
+          <th data-k="rost" class="num">Rost%</th><th data-k="avg" class="num">Avg</th><th data-k="pts" class="num">Pts</th><th></th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="mypicks" id="mypicks"></div>
+  </section>
+
+  <section class="card">
+    <h2><span>Draft Board</span><span class="muted" id="progress"></span></h2>
+    <div class="board"><div class="grid" id="grid"></div></div>
+    <div class="admin" id="admin"></div>
+  </section>
+</main>
+
+<div class="overlay" id="login" style="display:none">
+  <div class="modal">
+    <img class="mlogo" src="/ssl-logo.jpg" alt="Sure Shot League">
+    <h3>Who are you?</h3>
+    <p>Pick your Sure Shot team to join the draft.</p>
+    <div class="teams" id="teamBtns"></div>
+    <p style="margin:16px 0 0"><button class="link" id="spectate">Just watching</button></p>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const POS = ['ALL','QB','RB','WR','TE','K','DST'];
+let players = [], S = null, me = null, admin = null;
+let posFilter = 'ALL', sortK = 'pts', sortDir = -1, confirmId = null;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const store = { get(k){ try{return localStorage.getItem(k)}catch(e){return null} }, set(k,v){ try{ v==null?localStorage.removeItem(k):localStorage.setItem(k,v) }catch(e){} } };
+
+// ---------- pick sound (same ESPN ticker sting as the season-opener draft) ----------
+const sfx = new Audio('/pick.mp3'); sfx.preload = 'auto';
+let soundOn = store.get('sound') !== 'off', unlocked = false, lastCount = null, freshOverall = null;
+let unlockedAt = 0;
+function unlockAudio(){ if (unlocked) return; unlocked = true; unlockedAt = Date.now();
+  // browsers only allow audio after a tap/click; prime the element silently on the first one
+  sfx.muted = true; sfx.play().then(()=>{ sfx.pause(); sfx.currentTime = 0; sfx.muted = false; }).catch(()=>{ sfx.muted = false; unlocked = false; });
+  renderSound(); }
+['pointerdown','keydown','touchstart'].forEach(ev => document.addEventListener(ev, unlockAudio, {capture:true}));
+function playPick(){ if (!soundOn) return; try { sfx.currentTime = 0; sfx.play().catch(()=>{}); } catch(e){} }
+function renderSound(){ const b = $('snd'); if (!b) return;
+  if (!soundOn) { b.textContent = '🔇 Sound off'; b.className = 'snd'; }
+  else if (!unlocked) { b.textContent = '🔊 Tap to enable sound'; b.className = 'snd off'; }
+  else { b.textContent = '🔊 Sound on'; b.className = 'snd'; } }
+// call whenever new draft state arrives; plays the sting when the pick count goes up
+function notePicks(s){ const n = s.picks.length;
+  if (lastCount !== null && n > lastCount) { playPick(); freshOverall = s.picks[n-1].overall; setTimeout(()=>{ freshOverall = null; }, 1700); }
+  lastCount = n; }
+
+function toast(msg, err){ const t=$('toast'); t.textContent=msg; t.className='toast'+(err?' err':''); t.style.display='block'; clearTimeout(t._h); t._h=setTimeout(()=>t.style.display='none', 3500); }
+async function api(url, body){
+  const r = await fetch(url, body ? {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)} : {});
+  const j = await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(j.error || 'Request failed');
+  return j;
+}
+const teamName = id => (S.teams.find(t=>t.id===id)||{}).name || '?';
+
+function renderLogin(){
+  $('teamBtns').innerHTML = S.teams.map(t => {
+    const mine = S.order.filter(o=>o.teamId===t.id).map(o=>o.overall);
+    return `<button data-t="${t.id}">${esc(t.name)}<span>Picks #${mine.join(', #')}</span></button>`;
+  }).join('');
+  $('teamBtns').querySelectorAll('button').forEach(b => b.onclick = () => { me = +b.dataset.t; store.set('teamId', me); $('login').style.display='none'; render(); });
+}
+
+function renderHeader(){
+  const c = S.onClock;
+  let html;
+  if (S.complete) html = `<span class="pill">✅ Draft complete</span>`;
+  else {
+    const you = me === c.teamId;
+    html = `<span class="pill ${you?'you':''}">${you ? "🟢 YOU'RE ON THE CLOCK" : 'On the clock: <b>'+esc(teamName(c.teamId))+'</b>'}</span>
+            <span class="pill">Round ${c.round} · Pick ${c.pickInRound} · #${c.overall} of ${S.order.length}</span>`;
+    const nxt = S.order[c.overall];
+    if (nxt) html += `<span class="pill muted">Next: ${esc(teamName(nxt.teamId))}</span>`;
+  }
+  $('clock').innerHTML = html;
+  $('me').innerHTML = me ? `<span class="muted">Drafting as</span> <span class="name">${esc(teamName(me))}</span> <button class="link" id="switch">switch</button>`
+                         : `<span class="muted">Spectating</span> <button class="link" id="switch">log in</button>`;
+  $('switch').onclick = () => { me = null; store.set('teamId', null); $('login').style.display='flex'; render(); };
+}
+
+function renderPlayers(){
+  const taken = new Map(S.picks.map(p => [p.playerId, p]));
+  const q = $('q').value.trim().toLowerCase();
+  const myTurn = !S.complete && (me === S.onClock.teamId || admin);
+  let list = players.filter(p => (posFilter==='ALL' || p.pos===posFilter) && ($('showTaken').checked || !taken.has(p.id))
+      && (!q || p.name.toLowerCase().includes(q) || p.team.toLowerCase()===q));
+  list.sort((a,b) => { let x=a[sortK], y=b[sortK]; if(x==null)x=-1e9; if(y==null)y=-1e9;
+      return (typeof x==='string' ? x.localeCompare(y) : x-y) * sortDir || b.pts-a.pts; });
+  $('count').textContent = `${players.length - taken.size} available`;
+  const label = admin && me !== S.onClock?.teamId ? 'Draft for '+ (S.onClock? teamName(S.onClock.teamId):'') : 'Draft';
+  $('rows').innerHTML = list.map(p => {
+    const t = taken.get(p.id);
+    const action = t ? `<span class="muted">${esc(teamName(t.teamId))} R${t.round}</span>`
+      : `<button class="btn ${confirmId===p.id?'confirm':''}" data-id="${p.id}" ${myTurn?'':'disabled'}>${confirmId===p.id?'Confirm?':esc(label)}</button>`;
+    return `<tr class="${t?'taken':''}"><td><b>${esc(p.name)}</b></td><td><span class="pos" style="background:var(--${p.pos})">${p.pos}</span></td>
+      <td>${p.team}</td><td class="num">${p.bye}</td><td class="num">${p.rost}%</td><td class="num">${p.avg==null?'–':p.avg.toFixed(2)}</td><td class="num"><b>${p.pts}</b></td><td>${action}</td></tr>`;
+  }).join('') || `<tr><td colspan="8" class="muted" style="padding:20px">No players match.</td></tr>`;
+  $('rows').querySelectorAll('button[data-id]').forEach(b => b.onclick = () => onDraft(b.dataset.id));
+
+  const mine = S.picks.filter(p=>p.teamId===me);
+  $('mypicks').innerHTML = me ? `<span class="muted">My picks:</span> ` + (mine.length ? mine.map(p=>`<span class="pos" style="background:var(--${p.player.pos})">${p.player.pos}</span> ${esc(p.player.name)}`).join(' · ') : '<span class="muted">none yet</span>') : '';
+}
+
+async function onDraft(id){
+  if (confirmId !== id) { confirmId = id; renderPlayers(); setTimeout(()=>{ if(confirmId===id){confirmId=null; renderPlayers();} }, 4000); return; }
+  confirmId = null;
+  try {
+    const asAdmin = admin && me !== S.onClock.teamId;
+    S = asAdmin ? await api('/api/admin/pick', {password:admin, playerId:id}) : await api('/api/pick', {teamId:me, playerId:id});
+    notePicks(S); lastUpdate = S.updatedAt;
+    const p = players.find(x=>x.id===id); toast(`✅ Drafted ${p.name}`);
+  } catch(e){ toast(e.message, true); await refresh(); }
+  render();
+}
+
+function renderBoard(){
+  const byOverall = new Map(S.picks.map(p=>[p.overall,p]));
+  const cols = S.teams.length;
+  let h = `<div class="grid" style="grid-template-columns:34px repeat(${cols},1fr)"><div></div>` +
+    S.teams.map(t=>`<div class="gh ${t.id===me?'mine':''}" title="${esc(t.name)}">${esc(t.name)}</div>`).join('');
+  for (let r=1; r<=S.rounds; r++){
+    h += `<div class="rl">R${r}${r%2?'→':'←'}</div>`;
+    for (const t of S.teams){
+      const o = S.order.find(o=>o.round===r && o.teamId===t.id);
+      const p = byOverall.get(o.overall);
+      const now = S.onClock && S.onClock.overall===o.overall;
+      if (p) h += `<div class="cell filled ${t.id===me?'mine':''} ${o.overall===freshOverall?'fresh':''}" style="background:var(--${p.player.pos})"><span class="no">${r}.${String(o.pickInRound).padStart(2,'0')}</span><div class="pn">${esc(p.player.name)}</div><div class="pt">${p.player.pos} · ${p.player.team}</div></div>`;
+      else h += `<div class="cell ${now?'now':''} ${t.id===me?'mine':''}"><span class="no">${r}.${String(o.pickInRound).padStart(2,'0')}</span>${now?'<div class="pn" style="color:var(--good)">ON THE CLOCK</div>':''}</div>`;
+    }
+  }
+  $('grid').outerHTML = h.replace('<div class="grid"', '<div class="grid" id="grid"');
+  $('progress').textContent = `${S.picks.length} / ${S.order.length} picks`;
+}
+
+function renderAdmin(){
+  const el = $('admin');
+  if (!admin) { el.innerHTML = `<span class="muted">Commissioner?</span><input type="password" id="pw" placeholder="password" style="width:140px"><button class="btn ghost" id="pwGo">Unlock</button>`;
+    $('pwGo').onclick = async () => { const pw=$('pw').value; try{ await api('/api/admin/check',{password:pw}); admin=pw; store.set('admin',pw); toast('Commissioner tools unlocked'); render(); }catch(e){ toast(e.message,true);} };
+    return; }
+  el.innerHTML = `<b>Commissioner</b><span class="muted">You can draft for whoever is on the clock.</span>
+    <button class="btn ghost" id="undo" ${S.picks.length?'':'disabled'}>↶ Undo last pick</button>
+    <button class="btn danger" id="reset">Reset draft</button><button class="link" id="lock">lock</button>`;
+  $('undo').onclick = async () => { try{ S = await api('/api/admin/undo',{password:admin}); notePicks(S); lastUpdate = S.updatedAt; toast('Last pick undone'); render(); }catch(e){toast(e.message,true)} };
+  let armed=false; $('reset').onclick = async (ev) => { if(!armed){ armed=true; ev.target.textContent='Click again to wipe ALL picks'; setTimeout(()=>{armed=false; renderAdmin()},4000); return; }
+    try{ S = await api('/api/admin/reset',{password:admin}); notePicks(S); lastUpdate = S.updatedAt; toast('Draft reset'); render(); }catch(e){toast(e.message,true)} };
+  $('lock').onclick = () => { admin=null; store.set('admin',null); render(); };
+}
+
+function render(){ if(!S) return; renderHeader(); renderPlayers(); renderBoard(); renderAdmin(); }
+
+let lastUpdate = 0;
+async function refresh(){
+  try { const s = await api('/api/state'); if (s.updatedAt !== lastUpdate || !S) {
+      const wasMine = S && !S.complete && S.onClock.teamId===me;
+      notePicks(s); S = s; lastUpdate = s.updatedAt; render();
+      if (!wasMine && !S.complete && S.onClock.teamId===me) { toast("🟢 You're on the clock!"); try{ document.title='🟢 YOUR PICK – Sure Shot Draft' }catch(e){} }
+      else if (S.complete || S.onClock.teamId!==me) document.title='Sure Shot Supplemental Draft';
+  } } catch(e){}
+}
+
+$('chips').innerHTML = POS.map(p=>`<button class="chip ${p===posFilter?'on':''}" data-p="${p}">${p}</button>`).join('');
+$('chips').querySelectorAll('button').forEach(b=>b.onclick=()=>{ posFilter=b.dataset.p; $('chips').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b)); renderPlayers(); });
+$('q').oninput = renderPlayers; $('showTaken').onchange = renderPlayers;
+document.querySelectorAll('th[data-k]').forEach(th => th.onclick = () => { const k=th.dataset.k; if(sortK===k) sortDir*=-1; else { sortK=k; sortDir = ['name','pos','team','bye'].includes(k)?1:-1; } renderPlayers(); });
+$('snd').onclick = () => { if (soundOn && Date.now() - unlockedAt < 1500) { renderSound(); playPick(); return; } soundOn = !soundOn; store.set('sound', soundOn ? null : 'off'); renderSound(); if (soundOn) playPick(); };
+renderSound();
+$('spectate').onclick = () => { $('login').style.display='none'; };
+
+(async function init(){
+  players = await api('/api/players');
+  S = await api('/api/state'); lastUpdate = S.updatedAt; notePicks(S);
+  const saved = +store.get('teamId'); if (saved && S.teams.some(t=>t.id===saved)) me = saved;
+  admin = store.get('admin');
+  renderLogin(); if (!me) $('login').style.display='flex';
+  render();
+  setInterval(refresh, 3000);
+})();
+</script>
+</body>
+</html>
